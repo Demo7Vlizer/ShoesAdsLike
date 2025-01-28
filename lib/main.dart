@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:sneaker_shop/FadeAnimation.dart';
 import 'package:sneaker_shop/shoes.dart';
 import 'package:sneaker_shop/utils/image_cache_manager.dart';
+import 'package:sneaker_shop/shared/widgets/shoe_card_skeleton.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -159,122 +160,134 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget makeItem({image, tag, context}) {
-    return Hero(
-      tag: tag,
-      flightShuttleBuilder: (
-        BuildContext flightContext,
-        Animation<double> animation,
-        HeroFlightDirection flightDirection,
-        BuildContext fromHeroContext,
-        BuildContext toHeroContext,
-      ) {
-        return SingleChildScrollView(
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(image),
-                fit: BoxFit.cover,
-                filterQuality: FilterQuality.medium,
+  Widget makeItem(
+      {required String image,
+      required String tag,
+      required BuildContext context}) {
+    return FutureBuilder(
+      future: precacheImage(AssetImage(image), context),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return ShoeCardSkeleton();
+        }
+
+        return Hero(
+          tag: tag,
+          flightShuttleBuilder: (
+            BuildContext flightContext,
+            Animation<double> animation,
+            HeroFlightDirection flightDirection,
+            BuildContext fromHeroContext,
+            BuildContext toHeroContext,
+          ) {
+            return SingleChildScrollView(
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(image),
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.medium,
+                  ),
+                ),
+              ),
+            );
+          },
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Shoes(
+                    image: image,
+                    tag: tag,
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              height: 250,
+              width: double.infinity,
+              padding: EdgeInsets.all(20),
+              margin: EdgeInsets.only(bottom: 20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  image: AssetImage(image),
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.medium,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey[400]!,
+                    blurRadius: 10,
+                    offset: Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            FadeAnimation(
+                                1,
+                                Text(
+                                  "Sneakers",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            FadeAnimation(
+                                1.1,
+                                Text(
+                                  "Nike",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                )),
+                          ],
+                        ),
+                      ),
+                      FadeAnimation(
+                          1.2,
+                          Container(
+                            width: 35,
+                            height: 35,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle, color: Colors.white),
+                            child: Center(
+                              child: Icon(
+                                Icons.favorite_border,
+                                size: 20,
+                              ),
+                            ),
+                          ))
+                    ],
+                  ),
+                  FadeAnimation(
+                      1.2,
+                      Text(
+                        "100\$",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold),
+                      )),
+                ],
               ),
             ),
           ),
         );
       },
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Shoes(
-                image: image,
-                tag: tag,
-              ),
-            ),
-          );
-        },
-        child: Container(
-          height: 250,
-          width: double.infinity,
-          padding: EdgeInsets.all(20),
-          margin: EdgeInsets.only(bottom: 20),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            image: DecorationImage(
-              image: AssetImage(image),
-              fit: BoxFit.cover,
-              filterQuality: FilterQuality.medium,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey[400]!,
-                blurRadius: 10,
-                offset: Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        FadeAnimation(
-                            1,
-                            Text(
-                              "Sneakers",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold),
-                            )),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        FadeAnimation(
-                            1.1,
-                            Text(
-                              "Nike",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            )),
-                      ],
-                    ),
-                  ),
-                  FadeAnimation(
-                      1.2,
-                      Container(
-                        width: 35,
-                        height: 35,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.white),
-                        child: Center(
-                          child: Icon(
-                            Icons.favorite_border,
-                            size: 20,
-                          ),
-                        ),
-                      ))
-                ],
-              ),
-              FadeAnimation(
-                  1.2,
-                  Text(
-                    "100\$",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold),
-                  )),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
