@@ -4,6 +4,7 @@ import 'package:sneaker_shop/FadeAnimation.dart';
 import 'package:sneaker_shop/shoes.dart';
 import 'package:sneaker_shop/utils/image_cache_manager.dart';
 import 'package:sneaker_shop/shared/widgets/shoe_card_skeleton.dart';
+import 'package:sneaker_shop/utils/custom_page_route.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -196,8 +197,8 @@ class _HomePageState extends State<HomePage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => Shoes(
+                CustomPageRoute(
+                  child: Shoes(
                     image: image,
                     tag: tag,
                   ),
