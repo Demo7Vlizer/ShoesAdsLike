@@ -100,7 +100,7 @@ lib/
 ## 🎨 Design Process
 
 ### Initial Designs & Prototypes
-<div align="center">
+<!-- <div align="center">
   <details>
     <summary><b>Click to view design mockups</b></summary>
     <br>
@@ -111,7 +111,7 @@ lib/
       <img src="assets/icons/samples/Screenshot 2025-02-10 155229.png" width="250" alt="Design - Cart" />
     </div>
   </details>
-</div>
+</div> -->
 
 ## 📚 Learning Resources
 
